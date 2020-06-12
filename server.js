@@ -13,6 +13,18 @@ app.get("*", (req, res) => { res.sendFile(path.join(__dirname, "/public/index.ht
 app.get("/notes", (req, res) => { res.sendFile(path.join(__dirname, "/public/notes.html")) });
 app.get("/api/notes", (req, res) => { fs.readFile(path.join(__dirname, "db/db.json"), "utf8", (err, data) => { return res.json(JSON.parse(data)) }) });
 
+app.post("/api/notes", (req, res) => {
+    const note = req.body;
+    fs.readFile(path.join(__dirname, "db/db.json"), "utf8", (err, data) => {
+        const allNotes = JSON.parse(data);
+        allNotes.push(note);
+        fs.writeFile(path.join(__dirname, "db/db.json"), JSON.stringify(allNotes), (err, data) => {
+            if (err) throw (err);
+            return res.json(allNotes);
+        })
+    })
+})
+
 app.listen(PORT, function () {
     console.log("App listening on: http://localhost:" + PORT);
 });

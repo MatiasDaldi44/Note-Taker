@@ -25,7 +25,7 @@ app.post("/api/notes", (req, res) => {
     })
 });
 
-app.delete("/api/notes/:id", (res, res) => {
+app.delete("/api/notes/:id", (req, res) => {
     const deleteNote = req.params.id;
     fs.readFile(path.join(__dirname, "db/db/.json"), "utf8", (err, data) => {
         if (err) throw (err);

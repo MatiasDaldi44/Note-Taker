@@ -9,9 +9,9 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use("/public", express.static('./public'));
 
-app.get("*", (req, res) => { res.sendFile(path.join(__dirname, "./index.html")) });
-app.get("/notes", (req, res) => { res.sendFile(path.join(__dirname, "./notes.html")) });
-app.get("/api/notes", (req, res) => { fs.readFile(path.join(__dirname, "../db/db.json"), "utf8", (err, data) => { return res.json(JSON.parse(data)) }) });
+app.get("/notes", (req, res) => { res.sendFile(path.join(__dirname, "/public/notes.html")) });
+app.get("/api/notes", (req, res) => { fs.readFile(path.join(__dirname, "./db/db.json"), "utf8", (err, data) => { return res.json(JSON.parse(data)) }) });
+app.get("*", (req, res) => { res.sendFile(path.join(__dirname, "/public/index.html")) });
 
 app.post("/api/notes", (req, res) => {
     const note = req.body;
@@ -31,11 +31,13 @@ app.delete("/api/notes/:id", (req, res) => {
         if (err) throw (err);
         const allNotes = JSON.parse(data);
         for (let i = 0; i < allNotes.length; i++) {
-            allNotes.splice(i, 1);
-            fs.writeFile(path.join(__dirname, "db/db.json"), JSON.stringify(allNotes), (err, data) => {
-                if (err) throw (err);
-                return res.json(allNotes);
-            })
+            if (deleteNote === allNotes[i].id) {
+                allNotes.splice(i, 1);
+                fs.writeFile(path.join(__dirname, "db/db.json"), JSON.stringify(allNotes), (err, data) => {
+                    if (err) throw (err);
+                    return res.json(allNotes);
+                })
+            }
         }
     })
 });

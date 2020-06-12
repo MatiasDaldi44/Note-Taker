@@ -10,7 +10,7 @@ app.use(express.json());
 app.use("/public", express.static('./public'));
 
 app.get("/notes", (req, res) => { res.sendFile(path.join(__dirname, "/public/notes.html")) });
-app.get("/api/notes", (req, res) => { fs.readFile(path.join(__dirname, "./db/db.json"), "utf8", (err, data) => { return res.json(JSON.parse(data)) }) });
+app.get("/api/notes", (req, res) => { fs.readFile(path.join(__dirname, "db/db.json"), "utf8", (err, data) => { return res.json(JSON.parse(data)) }) });
 app.get("*", (req, res) => { res.sendFile(path.join(__dirname, "/public/index.html")) });
 
 app.post("/api/notes", (req, res) => {

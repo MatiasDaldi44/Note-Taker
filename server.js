@@ -15,6 +15,7 @@ app.get("*", (req, res) => { res.sendFile(path.join(__dirname, "/public/index.ht
 
 app.post("/api/notes", (req, res) => {
     const note = req.body;
+    note.id = noteID()
     fs.readFile(path.join(__dirname, "/db/db.json"), "utf8", (err, data) => {
         const allNotes = JSON.parse(data);
         allNotes.push(note);
@@ -27,7 +28,7 @@ app.post("/api/notes", (req, res) => {
 
 app.delete("/api/notes/:id", (req, res) => {
     const deleteNote = req.params.id;
-    fs.readFile(path.join(__dirname, "/db/db/.json"), "utf8", (err, data) => {
+    fs.readFile(path.join(__dirname, "/db/db.json"), "utf8", (err, data) => {
         if (err) throw (err);
         const allNotes = JSON.parse(data);
         for (let i = 0; i < allNotes.length; i++) {
@@ -41,6 +42,11 @@ app.delete("/api/notes/:id", (req, res) => {
         }
     })
 });
+
+function noteID() {
+    let id = JSON.stringify(Math.floor((Math.random() * 1000000000) + 1));
+    return id;
+};
 
 app.listen(PORT, function () {
     console.log("App listening on: http://localhost:" + PORT);
